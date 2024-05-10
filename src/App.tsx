@@ -9,16 +9,25 @@ import ImageModal from "./components/ImageModal/ImageModal";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
+interface Image {
+  id: string;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  alt_description: string;
+}
+ 
 function App() {
-  const [images, setImages] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [searchError, setSearchError] = useState(false);
+  const [images, setImages] = useState<Image[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [searchError, setSearchError] = useState<boolean>(false);
   const [page, setPage] = useState(null);
   const [topic, setTopic] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [showBtn, setShowBtn] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [showBtn, setShowBtn] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (topic.length === 0) return;
