@@ -1,6 +1,11 @@
 import css from "./ImageCard.module.css";
+import { Image } from "../../tipes";
 
-const ImageCard = ({ image, openModal }) => {
+interface ImageCardProps {
+  image: Image;
+  openModal: (image: Image) => void;
+}
+const ImageCard: React.FC<ImageCardProps> = ({ image, openModal }) => {
   return (
     <div>
       <img

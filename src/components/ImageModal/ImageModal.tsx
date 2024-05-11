@@ -1,10 +1,19 @@
 import { useEffect } from "react";
 import css from "./ImageModal.module.css";
 import Modal from "react-modal";
-
+import { Image } from "../../tipes";
+interface ImageModalProps {
+  image: Image | null;
+  modalOpen: boolean;
+  closeModal: () => void;
+}
 Modal.setAppElement("#root");
 
-const ImageModal = ({ image, modalOpen, closeModal }) => {
+const ImageModal: React.FC<ImageModalProps> = ({
+  image,
+  modalOpen,
+  closeModal,
+}) => {
   useEffect(() => {
     document.body.classList.add("modal-open");
     return () => {

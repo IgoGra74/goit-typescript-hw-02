@@ -1,9 +1,15 @@
-import axios from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { ImageData } from "./tipes";
 
-const instance = axios.create({ baseURL: "https://api.unsplash.com" });
+const instance: AxiosInstance = axios.create({
+  baseURL: "https://api.unsplash.com",
+});
 
-export const fetchImagesWithTopic = async (topic = "", page) => {
-  const ACCESS_KEY = "ePieEpooHVSDfaLGZpFPpKrHAmfSzEKF9sh9R4gAZaU";
+export const fetchImagesWithTopic = async (
+  topic: string = "",
+  page: number | null
+): Promise<ImageData> => {
+  const ACCESS_KEY: string = "ePieEpooHVSDfaLGZpFPpKrHAmfSzEKF9sh9R4gAZaU";
 
   const option = {
     params: {
@@ -15,7 +21,13 @@ export const fetchImagesWithTopic = async (topic = "", page) => {
     },
   };
 
-  const { data } = await instance.get(`/search/photos/`, option);
-
-  return data;
+  try {
+    const response: AxiosResponse<ImageData> = await instance.get(
+      "/search/photos/",
+      option
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch images from Unsplash API");
+  }
 };

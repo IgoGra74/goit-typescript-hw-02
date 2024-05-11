@@ -8,24 +8,17 @@ import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./components/ImageModal/ImageModal";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import { Image } from "./tipes";
+import { ImageData } from "./tipes";
 
-interface Image {
-  id: string;
-  urls: {
-    small: string;
-    regular: string;
-  };
-  alt_description: string;
-}
- 
 function App() {
   const [images, setImages] = useState<Image[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<boolean>(false);
-  const [page, setPage] = useState(null);
-  const [topic, setTopic] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [page, setPage] = useState<number | null>(null);
+  const [topic, setTopic] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [showBtn, setShowBtn] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -37,8 +30,8 @@ function App() {
         setError(false);
         setLoading(true);
 
-        const data = await fetchImagesWithTopic(topic, page);
-        const totalPages = data.total_pages;
+        const data: ImageData = await fetchImagesWithTopic(topic, page);
+        const totalPages: number = data.total_pages;
 
         if (data.results.length === 0) {
           setSearchError(true);
@@ -49,8 +42,8 @@ function App() {
         } else {
           setSearchError(false);
 
-          if (page <= totalPages) {
-            setImages((prevImages) => [...prevImages, ...data.results]);
+          if (page && page <= totalPages) {
+            setImages((prevImages) => [...(prevImages || []), ...data.results]);
             setShowBtn(true);
           }
         }
@@ -67,13 +60,13 @@ function App() {
     fetchImages();
   }, [topic, page]);
 
-  const onSearchImage = (searchImage) => {
+  const onSearchImage = (searchImage: string) => {
     setPage(1);
     setImages([]);
     setTopic(searchImage);
   };
 
-  const openModal = (image) => {
+  const openModal = (image: Image) => {
     setSelectedImage(image);
     setModalOpen(true);
   };
@@ -84,7 +77,7 @@ function App() {
   };
 
   const onMoreLoad = () => {
-    setPage(page + 1);
+    if (page !== null) setPage(page + 1);
   };
 
   return (
@@ -94,7 +87,7 @@ function App() {
       {searchError && <ErrorMessage />}
       {images && <ImageGallery images={images} openModal={openModal} />}
       {loading && <Loader />}
-      {showBtn && images.length > 0 && !loading && (
+      {showBtn && images && images.length > 0 && !loading && (
         <LoadMoreBtn onMoreLoad={onMoreLoad} />
       )}
       {selectedImage && (
